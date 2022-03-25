@@ -1,0 +1,4 @@
+{   
+    "connectionString": "mongodb+srv://classsd:showmeyourpower@cluster0.ybe17.mongodb.net/friday?retryWrites=true&w=majority",
+    "secret": "THIS IS THE SECRET KEY THAT NOBODY CAN KNOW BECAUSE I WROTE THIS AND I WILL BE AMAZING"
+}
