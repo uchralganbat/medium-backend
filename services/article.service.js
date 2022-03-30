@@ -10,6 +10,8 @@ module.exports = {
     commentArticle,
     getArticle,
     getUserArticle,
+    updateArticle,
+    approveArticle,
     _delete
 }
 
@@ -52,14 +54,20 @@ async function getUserArticle(author_id) {
     return await Article.find({'author': author_id});
 }
 
-async function updateArticle(article_id, params) {
+async function updateArticle(article_id, params, images) {
     let article = await Article.findById(article_id);
-    article
+    if(!article) throw 'article not found';
+    article.feature_img = images
+    Object.assign(article, params);
+    article.save();
 }
 
-async function _delete(article_id, author_id) {
-    let article = await Article.find({'id': article_id, 'author': author_id});
-    article.remove(); if(article);    
+async function approveArticle(article_id) {
+    await Article.findByIdAndUpdate(article_id, {'state': 'approved'});
+}
+
+async function _delete(article_id) {
+    await Article.findByIdAndRemove(article_id);    
 }
 // getAll: (req, res, next) => {
 //     Article.find(req.params.id)

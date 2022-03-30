@@ -3,6 +3,7 @@ const router = express.Router();
 const articleService = require('../services/article.service');
 const authorize = require('../_helpers/authorize');
 const uploader = require('../_helpers/uploader');
+const Role = require('../_helpers/role');
 
 router.post('/submit', authorize(), uploader.array('images'), submitArticle);
 router.post('/clap', clapArticle);
@@ -10,7 +11,9 @@ router.post('/comment', authorize(), commentArticle);
 router.get('/', getAll);
 router.get('/:id', getArticle);
 router.get('/my', authorize(), getUserArticle);
-router.delete('/', authorize(), _delete);
+router.put('/:id', authorize(), uploader.array('images'), update);
+router.put('/approve/:id', authorize(Role.Admin), approveArticle);
+router.delete('/:id', authorize(), _delete);
 
 module.exports = router;
 
@@ -39,7 +42,7 @@ function commentArticle(req, res, next) {
 }
 
 function getArticle(req, res, next) {
-    articleService.getArticle(req.params.article_id)
+    articleService.getArticle(req.params.id)
         .then((article) => res.json({article}))
         .catch(err => next(err));
 }
@@ -50,8 +53,20 @@ function getUserArticle(req, res, next) {
         .catch(err => next(err));
 }
 
+function update(req, res, next) {
+    articleService.updateArticle(req.params.id, req.body, req.files)
+        .then(() => res.json({}))
+        .catch(err => next(err));
+}
+
+function approveArticle(req, res, next) {
+    articleService.approveArticle(req.params.id)
+        .then(() => res.json({}))
+        .catch(err => next(err));
+}
+
 function _delete(req, res, next) {
-    articleService._delete(req.body.article_id, req.user.sub)
-        .then((message) => res.json({ message }))
+    articleService._delete(req.params.id)
+        .then(() => res.json({}))
         .catch(err => next(err));
 }

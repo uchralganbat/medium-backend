@@ -10,6 +10,7 @@ router.post('/register', register) // public route
 router.get('/', authorize(Role.Admin), getAll) // admin only
 router.get('/:id', authorize(Role.Admin), getById) // admin only
 router.put('/:id', authorize(), update) // authenticated users
+router.put('/follow/:id', authorize(), follow); // authenticated users;
 router.delete('/:id', authorize(), _delete) // authenticated users
 
 module.exports = router;
@@ -47,5 +48,11 @@ function getById(req, res, next) {
 function _delete(req, res, next) {
     userService._delete(req.params.id)
         .then(() => res.json({}))
+        .catch(err => next(err));
+}
+
+function follow(req, res, next) {
+    userService.follow(req.params.id, req.user.sub)
+        .then(() => res.json({message: 'followed'}))
         .catch(err => next(err));
 }

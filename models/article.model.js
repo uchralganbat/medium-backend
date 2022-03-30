@@ -8,7 +8,7 @@ const ArticleSchema = new Schema(
         description: String,
         feature_img: { type: Array, default: []},
         claps: { type: Number, default: 0 },
-        state: { type: String, enum: ['pending', 'approved'], required: true, default: 'pending' },
+        state: { type: String, required: true, default: 'pending' },
         author: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User'
@@ -21,7 +21,8 @@ const ArticleSchema = new Schema(
                 },
                 text: String
             }
-        ]
+        ],
+        createdAt: { type: Date, default: Date.now }
     }
 )
 

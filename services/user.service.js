@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs')
 const db = require('_helpers/db');
 const Role = require('../_helpers/role');
 const User = db.User;
+const Article = db.Article;
 
 module.exports = {
     authenticate,
@@ -11,7 +12,8 @@ module.exports = {
     getById,
     create,
     update,
-    _delete
+    _delete,
+    follow
 }
 
 async function authenticate({ username, password }) {
@@ -37,7 +39,6 @@ async function create(userParam) {
     if(await User.findOne({ username: userParam.username })) {
         throw 'Username "' + userParam.username + '" is already taken';
     }
-    
     const user = new User(userParam);
 
     if(userParam.password) {
@@ -79,3 +80,16 @@ async function _delete(id) {
     await User.findByIdAndRemove(id);
 }
 
+async function follow(user_to_follow_id, following_user_id) {
+    const followingUser = await User.findById(following_user_id);
+    const follower = await User.findById(user_to_follow_id);
+    if (followingUser.following.indexOf(user_to_follow_id) === -1) {
+        followingUser.following.push(user_to_follow_id);        
+    }
+    if(follower.followers.indexOf(following_user_id) === -1) {
+        follower.followers.push(following_user_id);
+    }
+
+    await follower.save();
+    await followingUser.save();
+}

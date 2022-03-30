@@ -21,7 +21,7 @@ const UserSchema = new Schema({
             ref: 'User'
         }
     ],
-    role: { type: String, enum: ['admin', 'restricted'], required: true, default: 'restricted' },
+    role: { type: String, enum: ['Admin', 'Restricted'], required: true, default: 'Restricted' },
     createdDate: { type: Date, default: Date.now }
 });
 
