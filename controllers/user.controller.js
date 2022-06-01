@@ -53,6 +53,6 @@ function _delete(req, res, next) {
 
 function follow(req, res, next) {
     userService.follow(req.params.id, req.user.sub)
-        .then(() => res.json({message: 'followed'}))
+        .then(() => res.json({message: 'followed a user with id:' + req.params.id}))
         .catch(err => next(err));
 }

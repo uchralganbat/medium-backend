@@ -83,11 +83,18 @@ async function _delete(id) {
 async function follow(user_to_follow_id, following_user_id) {
     const followingUser = await User.findById(following_user_id);
     const follower = await User.findById(user_to_follow_id);
+    
     if (followingUser.following.indexOf(user_to_follow_id) === -1) {
         followingUser.following.push(user_to_follow_id);        
+    } else {
+        followingUser.following.filter(id => id !== user_to_follow_id)
     }
+
+
     if(follower.followers.indexOf(following_user_id) === -1) {
         follower.followers.push(following_user_id);
+    } else {
+        follower.followers.filter(id => id !== following_user_id)
     }
 
     await follower.save();

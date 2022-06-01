@@ -5,8 +5,6 @@ const UserSchema = new Schema({
     username: { type: String, unique: true, required: true },
     email: String,
     hash: { type: String, required: true },
-    provider: String,
-    provider_id: String,
     token: String,
     provider_pic: String,
     followers: [
